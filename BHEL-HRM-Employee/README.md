@@ -41,7 +41,7 @@ Rules to keep everything compatible: do not change existing method signatures in
 without telling the others; add new methods/classes instead. Keep any new shared-data code inside
 `DataStore` (synchronized) so all services see the same data.
 
-## 4. Secure communication (SSL/TLS)
+##  Secure communication (SSL/TLS)
 
 Create a keystore once (keytool is in your JDK's `bin` folder):
 
@@ -60,7 +60,7 @@ Without `-Dhrm.ssl=true` everything runs as plain RMI for easy debugging.
 Clients on another computer also need: server `-Djava.rmi.server.hostname=<server IP>` and client `-Dhrm.host=<server IP>`.
 Tested: a client with the right truststore connects; a client without it, and a plain client, are refused.
 
-## 5. Design notes (useful for the report)
+##  Design notes (useful for the report)
 
 - **Multithreading:** RMI serves each call on its own thread. `DataStore` methods are `synchronized`;
   `applyLeave` checks balance + overlap and saves in one atomic step. Password hashing is done
@@ -80,14 +80,14 @@ Tested: a client with the right truststore connects; a client without it, and a 
 - **Maintainability / heterogeneity:** `DataStore` hides storage (swap in JDBC/file without changing
   services); Java-only serialization limits non-Java clients (JSON or Protocol Buffers would fix this).
 
-## 6. Assumptions and limits
+##  Assumptions and limits
 
 - Data is in memory and lost when the server stops (replace `DataStore` internals with a database to persist).
 - All leave types deduct from one balance (default 14 days). Days are calendar days.
 - Balance is deducted when HR **approves**; pending requests already count against what is available.
 - New applications must start today or later and cannot overlap an existing pending/approved leave.
 
-## 7. Test checklist
+##  Test checklist
 
 Login (right / wrong password / 5 wrong in a row = lock-out), view profile, update profile (valid / empty /
 duplicate IC), family add/remove/save/cancel (valid / invalid name), balance, apply leave (valid / overlap /
